@@ -1,0 +1,10 @@
+{
+	"replace": false,
+	"values": [
+		"firstmod:example_block",
+		"firstmod:tin_ore",
+		"firstmod:deepslate_tin_ore",
+		"firstmod:tin_block",
+		"firstmod:bronze_block"
+	]
+}

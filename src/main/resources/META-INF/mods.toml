@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="MIT"
+[[mods]] 
+modId="firstmod"
+version="${file.jarVersion}"
+displayName="First Mod"
+logoFile="examplemod.png"
+credits="Thanks for this example mod goes to Java"
+authors="CJ"
+description='''
+My First Ever Mod.
+'''
+
+[[dependencies.firstmod]]
+    modId="forge"
+    mandatory=true
+    versionRange="[40,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.firstmod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2,1.19)"
+    ordering="NONE"
+    side="BOTH"

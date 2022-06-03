@@ -1,0 +1,22 @@
+{
+	"itemGroup.firstmod": "First Mod Tab",
+	"item.firstmod.example_item": "Example Item",
+	"block.firstmod.example_block": "Example Block",
+	"block.firstmod.tin_ore": "Tin Ore",
+	"block.firstmod.deepslate_tin_ore": "Deepslate Tin Ore",
+	"block.firstmod.tin_block": "Tin Block",
+	"item.firstmod.raw_tin": "Raw Tin",
+	"item.firstmod.tin_ingot": "Tin Ingot",
+	"item.firstmod.tin_sword": "Tin Sword",
+	"item.firstmod.tin_axe": "Tin Axe",
+	"item.firstmod.tin_pickaxe": "Tin Pickaxe",
+	"item.firstmod.tin_hoe": "Tin Hoe",
+	"item.firstmod.tin_shovel": "Tin Shovel",
+	"item.firstmod.tin_helmet": "Tin Helmet",
+	"item.firstmod.tin_chestplate": "Tin Chestplate",
+	"item.firstmod.tin_leggings": "Tin Leggings",
+	"item.firstmod.tin_boots": "Tin Boots",
+	"item.firstmod.bronze_ingot": "Bronze Ingot",
+	"block.firstmod.bronze_block": "Bronze Block",
+	"block.firstmod.smelter_block": "Smelter"
+}

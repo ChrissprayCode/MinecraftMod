@@ -1,0 +1,7 @@
+{
+	"replace": false,
+	"values": [
+		"firstmod:example_block",
+		"firstmod:bronze_block"
+	]
+}

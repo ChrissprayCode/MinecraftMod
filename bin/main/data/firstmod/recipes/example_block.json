@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"AAA",
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"item": "firstmod:example_item"
+		}
+	},
+	"result": {
+		"item": "firstmod:example_block",
+		"count": 1
+	}
+}
