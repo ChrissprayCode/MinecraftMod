@@ -53,7 +53,10 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	//variables for progress of smelting
 	protected final ContainerData data;
     private int progress = 0;
-    private int maxProgress = 72;
+    private int maxProgress = 100;
+
+	private int lavaAmount = 0;
+	private int lavaMax = 100;
 	
 
 	public SmelterBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
@@ -65,6 +68,8 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
                 switch (index) {
                     case 0: return SmelterBlockEntity.this.progress;
                     case 1: return SmelterBlockEntity.this.maxProgress;
+					case 2: return SmelterBlockEntity.this.lavaAmount;
+					case 3: return SmelterBlockEntity.this.lavaMax;
                     default: return 0;
                 }
             }
@@ -73,11 +78,13 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
                 switch(index) {
                     case 0: SmelterBlockEntity.this.progress = value; break;
                     case 1: SmelterBlockEntity.this.maxProgress = value; break;
+					case 2: SmelterBlockEntity.this.lavaAmount = value; break;
+					case 3: SmelterBlockEntity.this.lavaMax = value; break;
                 }
             }
 
             public int getCount() {
-                return 2; //THIS MUST MATCH WHAT IS ON SMELTER MENU. IT'S HOW MUCH DATA YER PASSIN THROUGH
+                return 4; //THIS MUST MATCH WHAT IS ON SMELTER MENU. IT'S HOW MUCH DATA YER PASSIN THROUGH
             }
         };
 	}
@@ -123,6 +130,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	    protected void saveAdditional(@NotNull CompoundTag tag) {
 	        tag.put("inventory", itemHandler.serializeNBT());
 	        tag.putInt("smelter.progress", progress); //Save smelting progress
+			tag.putInt("smelter.lava", lavaAmount); //Save smelting progress
 	        super.saveAdditional(tag);
 	    }
 
@@ -131,6 +139,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	        super.load(nbt);
 	        itemHandler.deserializeNBT(nbt.getCompound("inventory"));
 	        progress = nbt.getInt("smelter.progress"); //Load smelting progress
+			lavaAmount = nbt.getInt("smelter.lava"); //Load smelting progress
 	    }
 
 	    public void drops() { //Makes sure that all of the items inside the block are dropped when block is broken
@@ -150,6 +159,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	            setChanged(pLevel, pPos, pState);
 	            if(pBlockEntity.progress > pBlockEntity.maxProgress) {
 	                craftItem(pBlockEntity);
+					pBlockEntity.lavaAmount -=1; //when done crafting, remove 1 lava (can craft 100 items per lava bucket)
 	            }
 	        } else {
 	            pBlockEntity.resetProgress();
@@ -164,14 +174,21 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
 	        }
 
+			//if you can insert lava, take the bucket nad give empty bucket. Set lava amount to 100;
+			if(canInsertLava(inventory, entity)){
+				entity.lavaAmount = 100;
+				entity.itemHandler.extractItem(0,1, false);
+				entity.itemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET)); //give the player their hard earned bucket back
+			}
+
 	        //IS THERE A VALID RECIPE WITH ITEMS PUT INTO THE SMLETER?
 	        Optional<SmelterRecipe> match = level.getRecipeManager()
 	                .getRecipeFor(SmelterRecipe.Type.INSTANCE, inventory, level);
 
-	        //If there is a valid recipe, and you can insert an item into the output slot (Not over 64 items, and is no current item/same item is already in
-//CHANGE THIS SO ITS &&LAVAISPRESENT
+	        //If there is a valid recipe, and you can insert an item into the output slot (Not over 64 items, and is no current item/same item is already inw
 	        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
-	                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem());
+	                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())
+					&& containsLava(entity) && !ThirdSlotEmpty(entity);
 	    }
 
 	    private static void craftItem(SmelterBlockEntity entity) {
@@ -194,10 +211,12 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 
 		        entity.itemHandler.setStackInSlot(3, new ItemStack(match.get().getResultItem().getItem(),
 	                    entity.itemHandler.getStackInSlot(3).getCount() + 1));
-		        entity.itemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET)); //give the player their hard earned bucket back
-
 	            entity.resetProgress();
+
 	        }
+
+
+
 	    }
 
 	    private void resetProgress() {
@@ -207,9 +226,18 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	    
 	    private static boolean containsLava(SmelterBlockEntity entity) {
 	    	
-	    	return entity.itemHandler.getStackInSlot(2).getItem() == Items.LAVA_BUCKET;
+	    	return entity.lavaAmount > 1;
 	    }
 
+		private static boolean canInsertLava(SimpleContainer inventory, SmelterBlockEntity entity){
+			return  inventory.getItem(0).getItem() == Items.LAVA_BUCKET && entity.lavaAmount < entity.lavaMax;
+
+		}
+
+		private static boolean ThirdSlotEmpty(SmelterBlockEntity entity) {
+
+			return entity.itemHandler.getStackInSlot(2).isEmpty();
+		}
 
 	    private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack output) {
 	        return inventory.getItem(3).getItem() == output.getItem() || inventory.getItem(3).isEmpty();
@@ -218,39 +246,5 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	    private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
 	        return inventory.getItem(3).getMaxStackSize() > inventory.getItem(3).getCount();
 	    }
-	    
-	    /*
-	    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, SmelterBlockEntity pBlockEntity) {
-	        if(hasRecipe(pBlockEntity) && hasNotReachedStackLimit(pBlockEntity)) {
-	            craftItem(pBlockEntity);
-	        }
-	    }
-	    
-	    private static void craftItem(SmelterBlockEntity entity) {
-	        entity.itemHandler.extractItem(0, 1, false); //extract 1 item from first slot,
-	        entity.itemHandler.extractItem(1, 3, false); //extract 1 item from second slot
-	        entity.itemHandler.extractItem(2, 1, false); //extract 1 item from third slot
-	        //entity.itemHandler.getStackInSlot(2).hurt(1, new Random(), null); //randomly hurt the tool in the third slot
-
-	        entity.itemHandler.setStackInSlot(3, new ItemStack(ItemInit.BRONZE_INGOT.get(),
-	                entity.itemHandler.getStackInSlot(3).getCount() + 1)); //create a bronze ingot in the last slot, or just add 1 if one exists
-	        entity.itemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET)); //give the player their hard earned bucket back
-	    }
-
-	    //Set the recipe for the item
-	    private static boolean hasRecipe(SmelterBlockEntity entity) {
-	        boolean hasItemInWaterSlot = entity.itemHandler.getStackInSlot(0).getItem() == Items.LAVA_BUCKET;
-	        boolean hasItemInFirstSlot = entity.itemHandler.getStackInSlot(1).getItem() == Items.COPPER_INGOT;
-	        boolean hasCorrectAmountInFirstSlot = entity.itemHandler.getStackInSlot(1).getCount() >= 3;
-	        boolean hasItemInSecondSlot = entity.itemHandler.getStackInSlot(2).getItem() == ItemInit.TIN_INGOT.get();
-
-	        return hasItemInWaterSlot && hasItemInFirstSlot && hasItemInSecondSlot && hasCorrectAmountInFirstSlot;
-	    }
-
-	    private static boolean hasNotReachedStackLimit(SmelterBlockEntity entity) {
-	        return entity.itemHandler.getStackInSlot(3).getCount() < entity.itemHandler.getStackInSlot(3).getMaxStackSize();
-	    }
-	    */
-	    
 
 }

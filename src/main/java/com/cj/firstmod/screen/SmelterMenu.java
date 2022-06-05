@@ -29,7 +29,7 @@ public class SmelterMenu extends AbstractContainerMenu{
 	private final ContainerData data;
 	
 	public SmelterMenu(int p_38852_, Inventory inv, FriendlyByteBuf extraData) {
-		this(p_38852_, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
+		this(p_38852_, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
 		
 	}
 	
@@ -65,6 +65,14 @@ public class SmelterMenu extends AbstractContainerMenu{
         int progressArrowSize = 26; // This is the height in pixels of your arrow
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
+    }
+
+    public int getScaledLavaProgress() {
+        int lavaAmount = this.data.get(2);
+        int lavaMax = this.data.get(3);  // Max Progress
+        int lavaContainerSize = 52; // This is the height in pixels of your container
+
+        return lavaMax != 0 && lavaAmount != 0 ? lavaAmount * lavaContainerSize / lavaMax : 0;
     }
 	
 	
