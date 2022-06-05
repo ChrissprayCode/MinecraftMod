@@ -1,5 +1,9 @@
 package com.cj.firstmod.block.custom;
 
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +34,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
+
+import java.util.Random;
 
 public class SmelterBlock extends BaseEntityBlock {
 
@@ -123,5 +129,6 @@ public class SmelterBlock extends BaseEntityBlock {
         return createTickerHelper(pBlockEntityType, BlockEntities.SMELTER_ENTITY.get(),
                 SmelterBlockEntity::tick);
     }
+
 
 }

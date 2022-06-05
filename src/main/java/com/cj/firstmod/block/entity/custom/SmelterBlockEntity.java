@@ -64,7 +64,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
     private int maxProgress = 100;
 
 	private int lavaAmount = 0;
-	private int lavaMax = 100;
+	private int lavaMax = 3;
 	
 
 	public SmelterBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
@@ -162,7 +162,10 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 //MORE IMPORTS
 	    
 	    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, SmelterBlockEntity pBlockEntity) {
-	        if(hasRecipe(pBlockEntity)) {
+
+			System.out.print(pBlockEntity.getBlockState().getLightEmission());
+
+			if(hasRecipe(pBlockEntity)) {
 	            pBlockEntity.progress++;
 	            setChanged(pLevel, pPos, pState);
 	            if(pBlockEntity.progress > pBlockEntity.maxProgress) {
@@ -174,13 +177,14 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	            setChanged(pLevel, pPos, pState);
 	        }
 
+			//make block give off/no light
 			if(containsLava(pBlockEntity)){
-				System.out.print(pBlockEntity.getBlockState().getLightEmission());
 				pLevel.setBlock(pPos, pState.setValue(ISEMPTY, false), 3);
 			}
 			else{
 				pLevel.setBlock(pPos, pState.setValue(ISEMPTY, true), 3);
 			}
+
 	    }
 
 	    private static boolean hasRecipe(SmelterBlockEntity entity) {
@@ -192,7 +196,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 
 			//if you can insert lava, take the bucket and give empty bucket. Set lava amount to 100;
 			if(canInsertLava(inventory, entity)){
-				entity.lavaAmount = 100;
+				entity.lavaAmount = entity.lavaMax;
 				entity.itemHandler.extractItem(0,1, false);
 				entity.itemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET)); //give the player their hard earned bucket back
 			}
@@ -242,7 +246,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	    
 	    private static boolean containsLava(SmelterBlockEntity entity) {
 	    	
-	    	return entity.lavaAmount > 1;
+	    	return entity.lavaAmount > 0;
 	    }
 
 		private static boolean canInsertLava(SimpleContainer inventory, SmelterBlockEntity entity){
@@ -262,5 +266,8 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	    private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
 	        return inventory.getItem(3).getMaxStackSize() > inventory.getItem(3).getCount();
 	    }
+
+
+
 
 }
