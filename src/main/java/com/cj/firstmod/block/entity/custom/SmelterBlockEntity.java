@@ -3,9 +3,15 @@ package com.cj.firstmod.block.entity.custom;
 import java.awt.TextComponent;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.ToIntFunction;
 
 import javax.annotation.Nonnull;
 
+import com.cj.firstmod.block.custom.SmelterBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,6 +45,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+
+import static com.cj.firstmod.block.custom.SmelterBlock.HASLAVA;
 
 public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	
@@ -165,6 +173,14 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	            pBlockEntity.resetProgress();
 	            setChanged(pLevel, pPos, pState);
 	        }
+
+			if(containsLava(pBlockEntity)){
+				System.out.print(pBlockEntity.getBlockState().getLightEmission());
+				pLevel.setBlock(pPos, pState.setValue(HASLAVA, true), 3);
+			}
+			else{
+				pLevel.setBlock(pPos, pState.setValue(HASLAVA, false), 3);
+			}
 	    }
 
 	    private static boolean hasRecipe(SmelterBlockEntity entity) {
@@ -174,7 +190,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
 	        }
 
-			//if you can insert lava, take the bucket nad give empty bucket. Set lava amount to 100;
+			//if you can insert lava, take the bucket and give empty bucket. Set lava amount to 100;
 			if(canInsertLava(inventory, entity)){
 				entity.lavaAmount = 100;
 				entity.itemHandler.extractItem(0,1, false);

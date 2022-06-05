@@ -1,5 +1,6 @@
 package com.cj.firstmod.block.custom;
 
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.Nullable;
 
 import com.cj.firstmod.block.entity.BlockEntities;
@@ -33,7 +34,7 @@ import net.minecraftforge.network.NetworkHooks;
 public class SmelterBlock extends BaseEntityBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING; //get the dir
-	
+	public static final BooleanProperty HASLAVA = BooleanProperty.create("haslava");
 	
 	public SmelterBlock(Properties p_49795_) {
 		super(p_49795_);
@@ -67,9 +68,12 @@ public class SmelterBlock extends BaseEntityBlock {
         return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
     }
 
+
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(FACING);
+        pBuilder.add(HASLAVA);
     }
 	
     
@@ -119,6 +123,5 @@ public class SmelterBlock extends BaseEntityBlock {
         return createTickerHelper(pBlockEntityType, BlockEntities.SMELTER_ENTITY.get(),
                 SmelterBlockEntity::tick);
     }
-
 
 }
