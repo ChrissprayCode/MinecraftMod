@@ -29,7 +29,8 @@ public class SmelterRecipe implements Recipe<SimpleContainer>{
 
     @Override
     public boolean matches(SimpleContainer pContainer, Level pLevel) {
-        return recipeItems.get(0).test(pContainer.getItem(1));
+        //get(x item from ingredient) and test it against x item slot in container
+        return recipeItems.get(0).test(pContainer.getItem(1)) && recipeItems.get(1).test(pContainer.getItem(2));
     }
 
     @Override

@@ -32,7 +32,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class SmelterBlock extends BaseEntityBlock {
 
-	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING; //get the 
+	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING; //get the dir
 	
 	
 	public SmelterBlock(Properties p_49795_) {
