@@ -46,7 +46,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-import static com.cj.firstmod.block.custom.SmelterBlock.HASLAVA;
+import static com.cj.firstmod.block.custom.SmelterBlock.ISEMPTY;
 
 public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	
@@ -176,10 +176,10 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 
 			if(containsLava(pBlockEntity)){
 				System.out.print(pBlockEntity.getBlockState().getLightEmission());
-				pLevel.setBlock(pPos, pState.setValue(HASLAVA, true), 3);
+				pLevel.setBlock(pPos, pState.setValue(ISEMPTY, false), 3);
 			}
 			else{
-				pLevel.setBlock(pPos, pState.setValue(HASLAVA, false), 3);
+				pLevel.setBlock(pPos, pState.setValue(ISEMPTY, true), 3);
 			}
 	    }
 

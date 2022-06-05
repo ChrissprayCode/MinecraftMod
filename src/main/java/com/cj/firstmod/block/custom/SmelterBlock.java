@@ -34,7 +34,7 @@ import net.minecraftforge.network.NetworkHooks;
 public class SmelterBlock extends BaseEntityBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING; //get the dir
-	public static final BooleanProperty HASLAVA = BooleanProperty.create("haslava");
+	public static final BooleanProperty ISEMPTY = BooleanProperty.create("isempty");
 	
 	public SmelterBlock(Properties p_49795_) {
 		super(p_49795_);
@@ -73,7 +73,7 @@ public class SmelterBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(FACING);
-        pBuilder.add(HASLAVA);
+        pBuilder.add(ISEMPTY);
     }
 	
     

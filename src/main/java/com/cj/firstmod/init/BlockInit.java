@@ -45,7 +45,7 @@ public class BlockInit {
 			object -> () -> new BlockItem(object.get(), new Item.Properties().tab(FirstMod.CHRIS_TAB)));
 	
 	
-	public static final RegistryObject<Block> SMELTER_BLOCK = register("smelter_block", () -> new SmelterBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(3.0f).sound(SoundType.STONE).lightLevel((state) -> state.getValue(SmelterBlock.HASLAVA) ? 15: 0)),
+	public static final RegistryObject<Block> SMELTER_BLOCK = register("smelter_block", () -> new SmelterBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(3.0f).sound(SoundType.STONE).lightLevel((state) -> state.getValue(SmelterBlock.ISEMPTY) ? 0: 15)),
 			object -> () -> new BlockItem(object.get(), new Item.Properties().tab(FirstMod.CHRIS_TAB)));
 	
 	
