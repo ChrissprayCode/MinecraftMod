@@ -3,11 +3,15 @@ package com.cj.firstmod.block.entity.custom;
 import java.awt.TextComponent;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.ToIntFunction;
 
 import javax.annotation.Nonnull;
 
 import com.cj.firstmod.block.custom.SmelterBlock;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
@@ -46,6 +50,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import static com.cj.firstmod.block.custom.SmelterBlock.FACING;
 import static com.cj.firstmod.block.custom.SmelterBlock.ISEMPTY;
 
 public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
@@ -64,7 +69,9 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
     private int maxProgress = 100;
 
 	private int lavaAmount = 0;
-	private int lavaMax = 3;
+	private int lavaMax = 100;
+
+	private boolean entityIsEmpty = getBlockState().getValue(ISEMPTY);
 	
 
 	public SmelterBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
@@ -163,9 +170,14 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	    
 	    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, SmelterBlockEntity pBlockEntity) {
 
-			System.out.print(pBlockEntity.getBlockState().getLightEmission());
+			//System.out.println(pBlockEntity.getBlockState().getLightEmission());
+			System.out.println(pBlockEntity.lavaAmount);
 
 			if(hasRecipe(pBlockEntity)) {
+				//animate block
+				Random pRandom = new Random();
+				playAnimations(pState, pLevel, pPos, pRandom, pBlockEntity);
+
 	            pBlockEntity.progress++;
 	            setChanged(pLevel, pPos, pState);
 	            if(pBlockEntity.progress > pBlockEntity.maxProgress) {
@@ -177,12 +189,18 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	            setChanged(pLevel, pPos, pState);
 	        }
 
+
 			//make block give off/no light
 			if(containsLava(pBlockEntity)){
 				pLevel.setBlock(pPos, pState.setValue(ISEMPTY, false), 3);
 			}
 			else{
 				pLevel.setBlock(pPos, pState.setValue(ISEMPTY, true), 3);
+			}
+
+			if(pBlockEntity.progress > 0){
+				//Random pRandom = new Random();
+				//playAnimations(pState, pLevel, pPos, pRandom, pBlockEntity);
 			}
 
 	    }
@@ -196,7 +214,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 
 			//if you can insert lava, take the bucket and give empty bucket. Set lava amount to 100;
 			if(canInsertLava(inventory, entity)){
-				entity.lavaAmount = entity.lavaMax;
+				entity.lavaAmount = entity.lavaAmount + 10;
 				entity.itemHandler.extractItem(0,1, false);
 				entity.itemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET)); //give the player their hard earned bucket back
 			}
@@ -208,7 +226,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	        //If there is a valid recipe, and you can insert an item into the output slot (Not over 64 items, and is no current item/same item is already inw
 	        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
 	                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())
-					&& containsLava(entity) && !ThirdSlotEmpty(entity);
+					&& containsLava(entity);//&& !ThirdSlotEmpty(entity);
 	    }
 
 	    private static void craftItem(SmelterBlockEntity entity) {
@@ -267,7 +285,28 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	        return inventory.getItem(3).getMaxStackSize() > inventory.getItem(3).getCount();
 	    }
 
+		public static void playAnimations(BlockState pState, Level pLevel, BlockPos pPos, Random pRandom, SmelterBlockEntity entity) {
+			if (!pState.getValue(ISEMPTY)) {
+				//sounds
+				double d0 = (double)pPos.getX() + 0.5D;
+				double d1 = (double)pPos.getY();
+				double d2 = (double)pPos.getZ() + 0.5D;
+				if (pRandom.nextDouble() < 0.05) {
+					pLevel.playLocalSound(d0, d1, d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
+				}
 
+				//particles
+				Direction direction = pState.getValue(FACING);
+				Direction.Axis direction$axis = direction.getAxis();
+				double d3 = 0.52D;
+				double d4 = pRandom.nextDouble() * 0.6D - 0.3D;
+				double d5 = direction$axis == Direction.Axis.X ? (double)direction.getStepX() * 0.52D : d4;
+				double d6 = pRandom.nextDouble() * 6.0D / 16.0D;
+				double d7 = direction$axis == Direction.Axis.Z ? (double)direction.getStepZ() * 0.52D : d4;
+				pLevel.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
+				pLevel.addParticle(ParticleTypes.FLAME, d0 + d5, d1 + d6, d2 + d7, 0.0D, 0.0D, 0.0D);
+			}
+		}
 
 
 }

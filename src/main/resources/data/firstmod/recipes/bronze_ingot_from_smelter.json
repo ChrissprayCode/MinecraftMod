@@ -2,7 +2,8 @@
 	"type": "firstmod:smelter",
 	"ingredients": [
 		{
-			"item": "minecraft:copper_ingot"
+			"item": "minecraft:copper_ingot",
+			"count": 3
 		},
 		{
 			"item": "firstmod:tin_ingot"	

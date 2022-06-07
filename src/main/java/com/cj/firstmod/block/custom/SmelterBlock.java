@@ -113,7 +113,6 @@ public class SmelterBlock extends BaseEntityBlock {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
         }
-
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
@@ -129,6 +128,7 @@ public class SmelterBlock extends BaseEntityBlock {
         return createTickerHelper(pBlockEntityType, BlockEntities.SMELTER_ENTITY.get(),
                 SmelterBlockEntity::tick);
     }
+
 
 
 }
