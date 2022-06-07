@@ -47,7 +47,16 @@ public class BlockInit {
 	
 	public static final RegistryObject<Block> SMELTER_BLOCK = register("smelter_block", () -> new SmelterBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(3.0f).sound(SoundType.STONE).lightLevel((state) -> state.getValue(SmelterBlock.ISEMPTY) ? 0: 15)),
 			object -> () -> new BlockItem(object.get(), new Item.Properties().tab(FirstMod.CHRIS_TAB)));
-	
+
+
+	public static final RegistryObject<Block> ZINC_ORE = register("zinc_ore", () -> new OreBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(3.0f).sound(SoundType.STONE)
+					.requiresCorrectToolForDrops(), UniformInt.of(2,4)),
+			object -> () -> new BlockItem(object.get(), new Item.Properties().tab(FirstMod.CHRIS_TAB)));
+	public static final RegistryObject<Block> DEEPSLATE_ZINC_ORE = register("deepslate_zinc_ore", () -> new OreBlock(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.COLOR_GRAY).strength(3.0f)
+					.sound(SoundType.STONE).requiresCorrectToolForDrops(), UniformInt.of(2, 4)),
+			object -> () -> new BlockItem(object.get(), new Item.Properties().tab(FirstMod.CHRIS_TAB)));
+
+
 	
 	
 	private static <T extends Block> RegistryObject<T> registerBlock(final String name, final Supplier<? extends T> block){

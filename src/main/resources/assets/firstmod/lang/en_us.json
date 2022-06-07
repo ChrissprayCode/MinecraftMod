@@ -18,5 +18,7 @@
 	"item.firstmod.tin_boots": "Tin Boots",
 	"item.firstmod.bronze_ingot": "Bronze Ingot",
 	"block.firstmod.bronze_block": "Bronze Block",
-	"block.firstmod.smelter_block": "Smelter"
+	"block.firstmod.smelter_block": "Smelter",
+	"block.firstmod.zinc_ore": "Zinc Ore",
+	"block.firstmod.deepslate_zinc_ore": "Deepslate Zinc Ore"
 }
