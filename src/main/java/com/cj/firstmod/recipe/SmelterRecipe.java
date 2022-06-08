@@ -14,24 +14,27 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 public class SmelterRecipe implements Recipe<SimpleContainer>{
 
 	private final ResourceLocation id;
     private final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
+    //private final NonNullList<Integer> recipeItemCount;
 
     public SmelterRecipe(ResourceLocation id, ItemStack output,
-                                   NonNullList<Ingredient> recipeItems) {
+                                   NonNullList<Ingredient> recipeItems /* NonNullList<Integer> recipeItemCount */) {
         this.id = id;
         this.output = output;
         this.recipeItems = recipeItems;
+        //this.recipeItemCount = recipeItemCount;
     }
 
     @Override
     public boolean matches(SimpleContainer pContainer, Level pLevel) {
         //get(x item from ingredient) and test it against x item slot in container
-        return recipeItems.get(0).test(pContainer.getItem(1)) && recipeItems.get(1).test(pContainer.getItem(2));
+        return recipeItems.get(0).test(pContainer.getItem(1)) && recipeItems.get(1).test(pContainer.getItem(2)) && recipeItems.get(0).getItems().length == pContainer.getItem(1).getCount();
     }
 
     @Override
@@ -77,15 +80,22 @@ public class SmelterRecipe implements Recipe<SimpleContainer>{
 
         public SmelterRecipe fromJson(ResourceLocation id, JsonObject json) {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
-
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
-            NonNullList<Ingredient> inputs = NonNullList.withSize(2, Ingredient.EMPTY); //Change int to amount of items in crafting needed
+            //JsonArray inputCount = GsonHelper.getAsJsonArray(json, "count");
 
+            NonNullList<Ingredient> inputs = NonNullList.withSize(2, Ingredient.EMPTY); //Change int to amount of items in crafting needed
             for (int i = 0; i < inputs.size(); i++) {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new SmelterRecipe(id, output, inputs);
+            /*
+            JsonArray recipeItemCount = GsonHelper.getAsJsonArray(json, "count");
+            for (int i = 0; i < inputs.size(); i++) { //using inputs size as will always be 2
+                recipeItemCount.set(i, Integer.fromJson(inputCount.get(i))); // What do I need to change this line to?
+            }
+            */
+
+            return new SmelterRecipe(id, output, inputs /*,recipeItemCount */);
         }
 
         @Override
@@ -96,8 +106,16 @@ public class SmelterRecipe implements Recipe<SimpleContainer>{
                 inputs.set(i, Ingredient.fromNetwork(buf));
             }
 
+            /*
+            NonNullList<Integer> recipeItemCount = NonNullList.withSize(buf.readInt(), 0);
+
+            for (int i = 0; i < inputs.size(); i++) {
+                recipeItemCount.set(i, recipeItemCount.fromNetwork(buf)); //this is also wrong, change to what?
+            }
+             */
+
             ItemStack output = buf.readItem();
-            return new SmelterRecipe(id, output, inputs);
+            return new SmelterRecipe(id, output, inputs /*, recipeItemCount*/);
         }
 
         @Override
@@ -106,6 +124,14 @@ public class SmelterRecipe implements Recipe<SimpleContainer>{
             for (Ingredient ing : recipe.getIngredients()) {
                 ing.toNetwork(buf);
             }
+
+            /* This is wrong, Don't fully understand how this works
+            buf.writeInt(recipe.getIngredients().size());
+            for (Integer int : recipe.getIngredients()) {
+                int.toNetwork(buf);
+            }
+             */
+
             buf.writeItemStack(recipe.getResultItem(), false);
         }
 

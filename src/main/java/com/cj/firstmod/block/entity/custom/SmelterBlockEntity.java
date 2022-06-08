@@ -171,7 +171,7 @@ public class SmelterBlockEntity extends BlockEntity implements MenuProvider{
 	    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, SmelterBlockEntity pBlockEntity) {
 
 			//System.out.println(pBlockEntity.getBlockState().getLightEmission());
-			System.out.println(pBlockEntity.lavaAmount);
+			//System.out.println(pBlockEntity.lavaAmount);
 
 			if(hasRecipe(pBlockEntity)) {
 				//animate block
