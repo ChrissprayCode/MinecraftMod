@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"A A",
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"item": "firstmod:tin_ingot"
+		}
+	},
+	"result": {
+		"item": "firstmod:tin_can",
+		"count": 8
+	}
+}

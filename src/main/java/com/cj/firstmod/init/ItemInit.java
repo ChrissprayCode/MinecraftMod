@@ -57,7 +57,25 @@ public class ItemInit {
 //BRONZE ITEMS
 	public static final RegistryObject<Item> BRONZE_INGOT = register("bronze_ingot", 
 			() -> new Item(new Item.Properties().tab(FirstMod.CHRIS_TAB).stacksTo(64)));
-	
+
+
+
+
+//FOOD ITEMS
+	//TIN CANS
+	public static final RegistryObject<Item> TIN_CAN = register("tin_can",
+			() -> new Item(new Item.Properties().tab(FirstMod.CHRIS_TAB).stacksTo(64)));
+
+	public static final RegistryObject<Item> TIN_CAN_TOMATO = register("tin_can_tomato",
+			() -> new Item(new Item.Properties().tab(FirstMod.CHRIS_TAB).stacksTo(64)));
+
+	//FOOD & CROPS
+	public static final RegistryObject<Item> TOMATO = register("tomato",
+			() -> new Item(new Item.Properties().tab(FirstMod.CHRIS_TAB).stacksTo(64).food(ModFoods.TOMATO)));
+
+
+
+
 	private static <T extends Item> RegistryObject<T> register(final String name, final Supplier<T> item){
 		return ITEMS.register(name, item);
 	}

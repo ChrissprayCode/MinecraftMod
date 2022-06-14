@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "firstmod:tin_can"
+		},
+		{
+			"item": "firstmod:tomato"
+		}
+	],
+	"result": {
+		"item": "firstmod:tin_can_tomato",
+		"count": 1
+	}
+}

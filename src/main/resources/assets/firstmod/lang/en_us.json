@@ -20,5 +20,8 @@
 	"block.firstmod.bronze_block": "Bronze Block",
 	"block.firstmod.smelter_block": "Smelter",
 	"block.firstmod.zinc_ore": "Zinc Ore",
-	"block.firstmod.deepslate_zinc_ore": "Deepslate Zinc Ore"
+	"block.firstmod.deepslate_zinc_ore": "Deepslate Zinc Ore",
+	"item.firstmod.tin_can": "Tin Can",
+	"item.firstmod.tomato": "Tomato",
+	"item.firstmod.tin_can_tomato": "Tin of Tomatoes"
 }
